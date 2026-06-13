@@ -1,13 +1,23 @@
 import type { EmailProvider } from "@/lib/email/types";
 
+function getTrimmedEnv(name: string) {
+  const value = process.env[name]?.trim();
+
+  return value || null;
+}
+
 export function getEmailProvider(): EmailProvider {
   const configuredProvider = process.env.EMAIL_PROVIDER?.trim().toLowerCase();
+
+  if (configuredProvider === "local") {
+    return "local";
+  }
 
   if (configuredProvider === "resend") {
     return "resend";
   }
 
-  if (process.env.RESEND_API_KEY?.trim()) {
+  if (getResendApiKey()) {
     return "resend";
   }
 
@@ -15,13 +25,13 @@ export function getEmailProvider(): EmailProvider {
 }
 
 export function getEmailFromAddress() {
-  return process.env.EMAIL_FROM?.trim() || "Ukiyo Studio <bookings@ukiyostudioehv.nl>";
+  return getTrimmedEnv("EMAIL_FROM") || "Ukiyo Studio <bookings@ukiyostudioehv.nl>";
 }
 
 export function getBookingNotificationEmail() {
-  return process.env.BOOKING_NOTIFICATION_EMAIL?.trim() || null;
+  return getTrimmedEnv("BOOKING_NOTIFICATION_EMAIL");
 }
 
 export function getResendApiKey() {
-  return process.env.RESEND_API_KEY?.trim() || null;
+  return getTrimmedEnv("RESEND_API_KEY") || getTrimmedEnv("resend_api");
 }
