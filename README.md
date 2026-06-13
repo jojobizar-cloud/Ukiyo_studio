@@ -120,7 +120,7 @@ Recommended deployment stack:
 After the first Vercel deployment, set these environment variables in Vercel:
 
 ```bash
-NEXT_PUBLIC_SITE_URL=https://your-vercel-domain.vercel.app
+NEXT_PUBLIC_SITE_URL=https://www.ukiyostudioehv.nl
 STRIPE_PUBLISHABLE_KEY=pk_test_...
 STRIPE_SECRET_KEY=sk_test_...
 STRIPE_WEBHOOK_SECRET=whsec_...
@@ -136,7 +136,7 @@ For Stripe webhooks on Vercel, create or update the Stripe event destination URL
 to:
 
 ```text
-https://your-vercel-domain.vercel.app/api/stripe/webhook
+https://www.ukiyostudioehv.nl/api/stripe/webhook
 ```
 
 Keep using Stripe test mode while playtesting. When switching to real payments,
