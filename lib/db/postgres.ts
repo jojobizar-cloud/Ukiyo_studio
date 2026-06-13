@@ -60,6 +60,7 @@ type BookingRow = {
   customer_email: string | null;
   amount_total_cents: number | null;
   currency: string | null;
+  refunded_at: string | null;
 };
 
 type EmailDeliveryRow = {
@@ -147,8 +148,14 @@ async function ensureDatabaseSchema() {
           stripe_payment_intent_id TEXT,
           customer_email TEXT,
           amount_total_cents INTEGER,
-          currency TEXT
+          currency TEXT,
+          refunded_at TEXT
         );
+      `);
+
+      await pool.query(`
+        ALTER TABLE bookings
+        ADD COLUMN IF NOT EXISTS refunded_at TEXT;
       `);
 
       await pool.query(`
@@ -233,6 +240,7 @@ function mapBooking(row: BookingRow): BookingRecord {
     customerEmail: row.customer_email,
     amountTotalCents: row.amount_total_cents,
     currency: row.currency,
+    refundedAt: row.refunded_at,
   };
 }
 
@@ -320,8 +328,8 @@ async function replaceBookingStore(client: Queryable, store: BookingStoreData) {
       `
         INSERT INTO bookings (
           id, slot_id, hold_id, seats, status, created_at, stripe_checkout_session_id,
-          stripe_payment_intent_id, customer_email, amount_total_cents, currency
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+          stripe_payment_intent_id, customer_email, amount_total_cents, currency, refunded_at
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
       `,
       [
         booking.id,
@@ -335,6 +343,7 @@ async function replaceBookingStore(client: Queryable, store: BookingStoreData) {
         booking.customerEmail ?? null,
         booking.amountTotalCents ?? null,
         booking.currency ?? null,
+        booking.refundedAt ?? null,
       ],
     );
   }

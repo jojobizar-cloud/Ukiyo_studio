@@ -1,6 +1,6 @@
 import { getSlotAvailability } from "@/lib/booking/availability";
 import { readBookingStore } from "@/lib/booking/localStore";
-import type { BookingSlotStatus } from "@/lib/booking/types";
+import type { BookingSlotStatus, BookingStatus } from "@/lib/booking/types";
 import { getWorkshop, workshops } from "@/lib/workshops";
 import { getAmsterdamTodayKey } from "@/lib/admin/dates";
 import {
@@ -44,8 +44,9 @@ export type AdminBookingRow = {
   dateLabel: string;
   timeLabel: string;
   seats: number;
-  status: string;
+  status: BookingStatus;
   createdAt: string;
+  refundedAt?: string | null;
   customerEmail?: string | null;
   amountTotalCents?: number | null;
   currency?: string | null;
@@ -80,6 +81,7 @@ export type AdminDashboardData = {
     openSlots: number;
     bookedSeats: number;
     paidBookings: number;
+    refundedBookings: number;
     revenueCents: number;
   };
   slots: AdminSlotRow[];
@@ -164,6 +166,7 @@ export async function getAdminDashboardData(): Promise<AdminDashboardData> {
         seats: booking.seats,
         status: booking.status,
         createdAt: booking.createdAt,
+        refundedAt: booking.refundedAt,
         customerEmail: booking.customerEmail,
         amountTotalCents: booking.amountTotalCents,
         currency: booking.currency,
@@ -173,6 +176,7 @@ export async function getAdminDashboardData(): Promise<AdminDashboardData> {
     .sort((left, right) => right.createdAt.localeCompare(left.createdAt));
 
   const paidBookings = bookings.filter((booking) => booking.status === "paid");
+  const refundedBookings = bookings.filter((booking) => booking.status === "refunded");
   const emails = emailOutbox
     .map((record) => ({
       id: record.id,
@@ -203,6 +207,7 @@ export async function getAdminDashboardData(): Promise<AdminDashboardData> {
       openSlots: slots.filter((slot) => slot.status === "open").length,
       bookedSeats: paidBookings.reduce((total, booking) => total + booking.seats, 0),
       paidBookings: paidBookings.length,
+      refundedBookings: refundedBookings.length,
       revenueCents: paidBookings.reduce(
         (total, booking) => total + (booking.amountTotalCents ?? 0),
         0,

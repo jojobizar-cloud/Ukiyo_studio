@@ -94,6 +94,7 @@ Use the `ADMIN_PASSWORD` value from `.env.local` to log in locally. The admin ar
 - Open or close existing slots.
 - Adjust slot capacity and price.
 - View paid bookings, booked seats, email status, and revenue.
+- Mark paid bookings as refunded/cancelled for admin records and CSV exports.
 - Keep closed slots in a separate archive section.
 - Export bookings as CSV.
 

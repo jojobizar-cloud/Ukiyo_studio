@@ -1,7 +1,11 @@
 "use client";
 
 import { FormEvent, useMemo, useState } from "react";
-import type { AdminDashboardData, AdminSlotRow } from "@/lib/admin/dashboard";
+import type {
+  AdminBookingRow,
+  AdminDashboardData,
+  AdminSlotRow,
+} from "@/lib/admin/dashboard";
 
 type AdminDashboardProps = {
   data: AdminDashboardData;
@@ -167,6 +171,69 @@ function SlotEditForm({ slot }: { slot: AdminSlotRow }) {
   );
 }
 
+function BookingStatusAction({ booking }: { booking: AdminBookingRow }) {
+  const [saving, setSaving] = useState(false);
+  const [message, setMessage] = useState<string | null>(null);
+  const isPaid = booking.status === "paid";
+  const nextStatus = isPaid ? "refunded" : "paid";
+
+  async function updateBookingStatus() {
+    const confirmed = window.confirm(
+      isPaid
+        ? "Mark this booking as refunded/cancelled in the admin records? This does not issue the refund in Stripe."
+        : "Restore this booking as paid? This will count the seats and revenue again.",
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    setSaving(true);
+    setMessage(null);
+
+    try {
+      const response = await fetch(
+        `/api/admin/bookings/${encodeURIComponent(booking.id)}`,
+        {
+          body: JSON.stringify({ status: nextStatus }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+          method: "PATCH",
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error(await parseApiError(response));
+      }
+
+      window.location.reload();
+    } catch (updateError) {
+      setMessage(
+        updateError instanceof Error
+          ? updateError.message
+          : "Could not update booking status.",
+      );
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  return (
+    <div className="admin-booking-action">
+      <button
+        className="button button-soft"
+        disabled={saving}
+        onClick={updateBookingStatus}
+        type="button"
+      >
+        {saving ? "Saving..." : isPaid ? "Mark refunded" : "Restore paid"}
+      </button>
+      {message ? <div className="admin-message is-error">{message}</div> : null}
+    </div>
+  );
+}
+
 export function AdminDashboard({ data }: AdminDashboardProps) {
   const [slotForm, setSlotForm] = useState<SlotFormState>(() => makeInitialSlotForm(data));
   const [creating, setCreating] = useState(false);
@@ -274,6 +341,10 @@ export function AdminDashboard({ data }: AdminDashboardProps) {
         <div>
           <span>Paid bookings</span>
           <strong>{data.summary.paidBookings}</strong>
+        </div>
+        <div>
+          <span>Refunded</span>
+          <strong>{data.summary.refundedBookings}</strong>
         </div>
         <div>
           <span>Booked seats</span>
@@ -467,7 +538,7 @@ export function AdminDashboard({ data }: AdminDashboardProps) {
         <div className="admin-section-header">
           <div>
             <p className="eyebrow">Payments</p>
-            <h2>Paid bookings</h2>
+            <h2>Booking records</h2>
           </div>
           <p>{data.bookings.length} booking records</p>
         </div>
@@ -480,13 +551,15 @@ export function AdminDashboard({ data }: AdminDashboardProps) {
                   <th>Workshop</th>
                   <th>Date</th>
                   <th>Seats</th>
+                  <th>Status</th>
                   <th>Customer</th>
                   <th>Amount</th>
+                  <th>Action</th>
                 </tr>
               </thead>
               <tbody>
                 {data.bookings.map((booking) => (
-                  <tr key={booking.id}>
+                  <tr className={`is-${booking.status}`} key={booking.id}>
                     <td>{formatDateTime(booking.createdAt)}</td>
                     <td>{booking.workshopTitle}</td>
                     <td>
@@ -495,11 +568,28 @@ export function AdminDashboard({ data }: AdminDashboardProps) {
                       <span>{booking.timeLabel}</span>
                     </td>
                     <td>{booking.seats}</td>
+                    <td>
+                      <span className={`admin-status is-${booking.status}`}>
+                        {booking.status}
+                      </span>
+                      {booking.refundedAt ? (
+                        <span className="admin-refund-date">
+                          {formatDateTime(booking.refundedAt)}
+                        </span>
+                      ) : null}
+                    </td>
                     <td>{booking.customerEmail ?? "No email from Stripe yet"}</td>
                     <td>
                       {booking.amountTotalCents
                         ? formatMoney(booking.amountTotalCents, booking.currency ?? "EUR")
                         : "Not stored"}
+                    </td>
+                    <td className="admin-actions-cell">
+                      {booking.status === "paid" || booking.status === "refunded" ? (
+                        <BookingStatusAction booking={booking} />
+                      ) : (
+                        ""
+                      )}
                     </td>
                   </tr>
                 ))}

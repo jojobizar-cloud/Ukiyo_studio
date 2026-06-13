@@ -1065,7 +1065,7 @@ p {
 
 .admin-summary-grid {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 14px;
 }
 
@@ -1165,7 +1165,8 @@ p {
   text-transform: uppercase;
 }
 
-.admin-status.is-open {
+.admin-status.is-open,
+.admin-status.is-paid {
   background: var(--moss);
 }
 
@@ -1174,11 +1175,13 @@ p {
   background: var(--moss);
 }
 
-.admin-status.is-closed {
+.admin-status.is-closed,
+.admin-status.is-cancelled {
   background: var(--ink);
 }
 
-.admin-status.is-failed {
+.admin-status.is-failed,
+.admin-status.is-refunded {
   background: var(--clay-dark);
 }
 
@@ -1221,7 +1224,7 @@ p {
 
 .admin-table {
   width: 100%;
-  min-width: 760px;
+  min-width: 980px;
   border-collapse: collapse;
   background: #ffffff;
   border: 1px solid var(--line);
@@ -1249,6 +1252,40 @@ p {
 .admin-table span {
   color: var(--muted);
   font-weight: 700;
+}
+
+.admin-table tr.is-refunded td:not(.admin-actions-cell),
+.admin-table tr.is-cancelled td:not(.admin-actions-cell) {
+  opacity: 0.62;
+  text-decoration: line-through;
+  text-decoration-thickness: 2px;
+}
+
+.admin-table tr.is-refunded .admin-status,
+.admin-table tr.is-cancelled .admin-status,
+.admin-table tr.is-refunded .admin-refund-date,
+.admin-table tr.is-cancelled .admin-refund-date {
+  text-decoration: none;
+}
+
+.admin-actions-cell {
+  width: 170px;
+}
+
+.admin-booking-action {
+  display: grid;
+  gap: 8px;
+}
+
+.admin-booking-action .button {
+  min-height: 38px;
+  padding: 8px 12px;
+}
+
+.admin-refund-date {
+  display: block;
+  margin-top: 7px;
+  font-size: 0.78rem;
 }
 
 .admin-empty {

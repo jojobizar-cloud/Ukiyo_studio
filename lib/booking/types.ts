@@ -1,6 +1,6 @@
 export type BookingSlotStatus = "open" | "closed";
 export type BookingHoldStatus = "active" | "released" | "expired" | "converted";
-export type BookingStatus = "paid" | "cancelled";
+export type BookingStatus = "paid" | "cancelled" | "refunded";
 export type BookingCurrency = "EUR";
 
 export type BookingSlotRecord = {
@@ -36,6 +36,7 @@ export type BookingRecord = {
   customerEmail?: string | null;
   amountTotalCents?: number | null;
   currency?: string | null;
+  refundedAt?: string | null;
 };
 
 export type BookingStoreData = {
