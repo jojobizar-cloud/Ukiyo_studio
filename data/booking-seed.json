@@ -1,0 +1,66 @@
+{
+  "slots": [
+    {
+      "id": "slot_foam_2026_07_11_1000",
+      "workshopSlug": "foam-clay-mirror",
+      "startsAt": "2026-07-11T10:00:00+02:00",
+      "endsAt": "2026-07-11T12:30:00+02:00",
+      "capacity": 10,
+      "priceCents": 4000,
+      "currency": "EUR",
+      "status": "open"
+    },
+    {
+      "id": "slot_foam_2026_07_19_1000",
+      "workshopSlug": "foam-clay-mirror",
+      "startsAt": "2026-07-19T10:00:00+02:00",
+      "endsAt": "2026-07-19T12:30:00+02:00",
+      "capacity": 10,
+      "priceCents": 4000,
+      "currency": "EUR",
+      "status": "open"
+    },
+    {
+      "id": "slot_foam_2026_07_25_1500",
+      "workshopSlug": "foam-clay-mirror",
+      "startsAt": "2026-07-25T15:00:00+02:00",
+      "endsAt": "2026-07-25T17:30:00+02:00",
+      "capacity": 10,
+      "priceCents": 4000,
+      "currency": "EUR",
+      "status": "open"
+    },
+    {
+      "id": "slot_charm_2026_07_12_1300",
+      "workshopSlug": "charm-bar",
+      "startsAt": "2026-07-12T13:00:00+02:00",
+      "endsAt": "2026-07-12T14:30:00+02:00",
+      "capacity": 10,
+      "priceCents": 1500,
+      "currency": "EUR",
+      "status": "open"
+    },
+    {
+      "id": "slot_charm_2026_07_18_1100",
+      "workshopSlug": "charm-bar",
+      "startsAt": "2026-07-18T11:00:00+02:00",
+      "endsAt": "2026-07-18T12:30:00+02:00",
+      "capacity": 10,
+      "priceCents": 1500,
+      "currency": "EUR",
+      "status": "open"
+    },
+    {
+      "id": "slot_charm_2026_07_26_1400",
+      "workshopSlug": "charm-bar",
+      "startsAt": "2026-07-26T14:00:00+02:00",
+      "endsAt": "2026-07-26T15:30:00+02:00",
+      "capacity": 10,
+      "priceCents": 1500,
+      "currency": "EUR",
+      "status": "open"
+    }
+  ],
+  "holds": [],
+  "bookings": []
+}

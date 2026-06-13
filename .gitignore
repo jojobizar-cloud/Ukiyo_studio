@@ -1,0 +1,11 @@
+.next/
+.next-build/
+.next-webpack/
+node_modules/
+out/
+dist/
+.env
+.env*.local
+*.log
+*.tsbuildinfo
+data/*.local.json
