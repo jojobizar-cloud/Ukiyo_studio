@@ -1,6 +1,7 @@
 .next/
 .next-build/
 .next-webpack/
+.vercel/
 node_modules/
 out/
 dist/
@@ -9,3 +10,5 @@ dist/
 *.log
 *.tsbuildinfo
 data/*.local.json
+
+.vercel
