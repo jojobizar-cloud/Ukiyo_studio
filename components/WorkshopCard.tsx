@@ -16,7 +16,7 @@ export function WorkshopCard({ workshop }: WorkshopCardProps) {
         <div className="workshop-card-copy">
           <p className="eyebrow">{workshop.navTitle}</p>
           <h3>{workshop.title}</h3>
-          <p>{workshop.shortDescription}</p>
+          <p>{workshop.cardDescription}</p>
           <div className="workshop-meta">
             <span>{workshop.priceLabel}</span>
             <span>{workshop.capacityLabel}</span>

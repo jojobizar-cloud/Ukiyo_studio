@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ContactNavButton } from "@/components/ContactNavButton";
 import { WorkshopCard } from "@/components/WorkshopCard";
 import { studioLocation, workshops } from "@/lib/workshops";
 
@@ -12,10 +13,7 @@ export default function Home() {
             Slow down.
             <span>Create with your hands.</span>
           </h1>
-          <p>
-            Calm, cozy workshops designed for connection, color, and mindful creativity at
-            Ukiyo Studio.
-          </p>
+          <p>Creative workshops in Eindhoven for slowing down, connecting, and enjoying the moment.</p>
           <div className="hero-actions">
             <Link className="button button-primary" href="/workshops">
               View workshops
@@ -32,8 +30,9 @@ export default function Home() {
           <p className="eyebrow">Choose your moment</p>
           <h2>Creative workshops</h2>
           <p>
-            Pick the format that fits your mood: a detailed mirror project, a playful charm bar,
-            or the coming-soon tote bag session.
+            Take a break from the everyday and immerse yourself in a hands-on creative
+            experience. Our workshops are designed to inspire, spark creativity, and leave you
+            with something beautiful you have made yourself.
           </p>
         </div>
         <div className="workshop-grid">
@@ -78,6 +77,25 @@ export default function Home() {
               <h3>No experience needed</h3>
               <p>Everyone is welcome, just as you are.</p>
             </div>
+          </div>
+          <div className="private-booking-note">
+            <div>
+              <h3>Private groups and special occasions</h3>
+              <p>
+                Planning a birthday, bachelorette party, team event, or creative gathering? Tell us
+                your group size, preferred date, and workshop idea, and we will help shape the
+                experience.
+              </p>
+            </div>
+            <ContactNavButton
+              className="button button-soft"
+              intent="group-booking"
+              subject="Private group booking request"
+              workshop="Private group or event"
+              message="Tell us your occasion, preferred workshop, group size, preferred date, and anything else we should know."
+            >
+              Request a private workshop
+            </ContactNavButton>
           </div>
         </div>
       </section>

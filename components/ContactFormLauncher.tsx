@@ -4,6 +4,7 @@ import { FormEvent, useEffect, useState } from "react";
 
 type ContactFormState = {
   email: string;
+  intent: "group-booking" | "";
   message: string;
   name: string;
   subject: string;
@@ -12,11 +13,34 @@ type ContactFormState = {
 
 const initialFormState: ContactFormState = {
   email: "",
+  intent: "",
   message: "",
   name: "",
   subject: "",
   workshop: "",
 };
+
+type ContactFormPrefill = Partial<Pick<ContactFormState, "intent" | "message" | "subject" | "workshop">>;
+
+function getStringDetail(value: unknown) {
+  return typeof value === "string" ? value : "";
+}
+
+function getPrefillFromEvent(event: Event): ContactFormPrefill | null {
+  if (!(event instanceof CustomEvent) || !event.detail || typeof event.detail !== "object") {
+    return null;
+  }
+
+  const detail = event.detail as Record<string, unknown>;
+  const intent = detail.intent === "group-booking" ? "group-booking" : "";
+
+  return {
+    intent,
+    message: getStringDetail(detail.message),
+    subject: getStringDetail(detail.subject),
+    workshop: getStringDetail(detail.workshop),
+  };
+}
 
 export function ContactFormLauncher() {
   const [isOpen, setIsOpen] = useState(false);
@@ -26,7 +50,16 @@ export function ContactFormLauncher() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    function openContactForm() {
+    function openContactForm(event: Event) {
+      const prefill = getPrefillFromEvent(event);
+
+      if (prefill) {
+        setForm((current) => ({
+          ...current,
+          ...prefill,
+        }));
+      }
+
       setIsOpen(true);
     }
 
@@ -96,7 +129,11 @@ export function ContactFormLauncher() {
             <div className="contact-panel-header">
               <div>
                 <p className="eyebrow">Contact</p>
-                <h2 id="contact-title">Send Ukiyo Studio a message</h2>
+                <h2 id="contact-title">
+                  {form.intent === "group-booking"
+                    ? "Request a private workshop"
+                    : "Send Ukiyo Studio a message"}
+                </h2>
               </div>
               <button
                 aria-label="Close contact form"
@@ -108,6 +145,7 @@ export function ContactFormLauncher() {
               </button>
             </div>
             <form className="contact-form" onSubmit={submitContact}>
+              <input name="intent" type="hidden" value={form.intent} />
               <label>
                 Name
                 <input

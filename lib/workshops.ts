@@ -5,6 +5,7 @@ export type Workshop = {
   title: string;
   navTitle: string;
   tagline: string;
+  cardDescription: string;
   shortDescription: string;
   longDescription: string;
   priceLabel: string;
@@ -37,6 +38,8 @@ export const workshops: Workshop[] = [
     title: "Foam Clay Mirror Workshop",
     navTitle: "Foam Clay",
     tagline: "Decorate a mirror with soft clay flowers, shapes, and color.",
+    cardDescription:
+      "Transform a plain mirror into a one-of-a-kind piece using soft foam clay, colorful details, and your own creative touch.",
     shortDescription:
       "A slow, tactile workshop where you decorate your own mirror with lightweight foam clay details.",
     longDescription:
@@ -64,6 +67,8 @@ export const workshops: Workshop[] = [
     title: "Charm Bar Experience",
     navTitle: "Charm Bar",
     tagline: "Build a colorful custom bag charm with beads, letters, and playful details.",
+    cardDescription:
+      "Create your own keychain, bag charm, or phone strap using our selection of charms.",
     shortDescription:
       "Choose from a curated charm bar and design a sweet, personal accessory in a relaxed studio setting.",
     longDescription:
@@ -91,6 +96,8 @@ export const workshops: Workshop[] = [
     title: "Paint a Tote Bag",
     navTitle: "Tote Bag",
     tagline: "A new textile workshop for painting your own everyday tote.",
+    cardDescription:
+      "Turn a blank tote bag into something uniquely yours using fabric pens, with the freedom to create your own design or use one of our templates.",
     shortDescription:
       "A coming-soon session for creating a reusable tote bag with your own painted design.",
     longDescription:

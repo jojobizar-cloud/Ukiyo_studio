@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     template: "%s | Ukiyo Studio",
   },
   description:
-    "Creative workshops in Eindhoven for calm, connection, and mindful making. Join Foam Clay Mirror workshops, the Charm Bar Experience, and coming-soon tote bag sessions.",
+    "Creative workshops in Eindhoven for slowing down, connecting, and enjoying the moment.",
   metadataBase: new URL("https://www.ukiyostudioehv.nl"),
 };
 

@@ -13,6 +13,14 @@ export function Header() {
         <Link href="/workshops">Workshops</Link>
         <Link href="/#gallery">Gallery</Link>
         <Link href="/#about">About</Link>
+        <ContactNavButton
+          intent="group-booking"
+          subject="Private group booking request"
+          workshop="Private group or event"
+          message="Tell us your occasion, preferred workshop, group size, preferred date, and anything else we should know."
+        >
+          Group bookings
+        </ContactNavButton>
         <ContactNavButton />
       </nav>
     </header>

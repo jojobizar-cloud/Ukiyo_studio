@@ -12,6 +12,7 @@ function getContactRecipient() {
 
 type ContactBody = {
   email?: unknown;
+  intent?: unknown;
   message?: unknown;
   name?: unknown;
   subject?: unknown;
@@ -49,6 +50,7 @@ async function readBody(request: Request) {
 
 function createContactEmail({
   email,
+  intent,
   message,
   name,
   reference,
@@ -56,15 +58,21 @@ function createContactEmail({
   workshop,
 }: {
   email: string;
+  intent: string;
   message: string;
   name: string;
   reference: string;
   subject: string;
   workshop: string;
 }) {
-  const subjectLine = `[Website contact] ${subject || "New message"}`;
+  const isGroupBooking = intent === "group-booking";
+  const subjectLine = `${isGroupBooking ? "[Group booking]" : "[Website contact]"} ${
+    subject || (isGroupBooking ? "Private workshop request" : "New message")
+  }`;
+  const inquiryType = isGroupBooking ? "Private group booking" : "Website contact";
   const lines = [
     `Reference: ${reference}`,
+    `Inquiry type: ${inquiryType}`,
     `Name: ${name || "Not provided"}`,
     `Visitor email: ${email}`,
     `Workshop/topic: ${workshop || "Not selected"}`,
@@ -77,8 +85,9 @@ function createContactEmail({
 <html>
   <body style="margin:0;background:#f7f0e7;color:#1f211d;font-family:Arial,Helvetica,sans-serif;line-height:1.6;">
     <div style="max-width:680px;margin:0 auto;padding:32px 20px;">
-      <h1 style="font-family:Georgia,'Times New Roman',serif;font-weight:400;font-size:34px;line-height:1.1;margin:0 0 24px;">Website contact message</h1>
+      <h1 style="font-family:Georgia,'Times New Roman',serif;font-weight:400;font-size:34px;line-height:1.1;margin:0 0 24px;">${escapeHtml(inquiryType)} message</h1>
       <p><strong>Reference:</strong> ${escapeHtml(reference)}</p>
+      <p><strong>Inquiry type:</strong> ${escapeHtml(inquiryType)}</p>
       <p><strong>Name:</strong> ${escapeHtml(name || "Not provided")}</p>
       <p><strong>Visitor email:</strong> ${escapeHtml(email)}</p>
       <p><strong>Workshop/topic:</strong> ${escapeHtml(workshop || "Not selected")}</p>
@@ -104,6 +113,7 @@ export async function POST(request: Request) {
   }
 
   const email = cleanText(body.email, 180).toLowerCase();
+  const intent = cleanText(body.intent, 80) === "group-booking" ? "group-booking" : "";
   const message = cleanText(body.message, 3000);
   const name = cleanText(body.name, 120);
   const subject = cleanText(body.subject, 160);
@@ -119,11 +129,12 @@ export async function POST(request: Request) {
 
   const reference = `contact_${randomUUID()}`;
   const contentHash = createHash("sha256")
-    .update(`${email}:${subject}:${message}`)
+    .update(`${intent}:${email}:${workshop}:${subject}:${message}`)
     .digest("hex")
     .slice(0, 24);
   const emailContent = createContactEmail({
     email,
+    intent,
     message,
     name,
     reference,
