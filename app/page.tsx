@@ -94,7 +94,11 @@ export default function Home() {
           />
           <img
             src="/images/gallery/charm-bar-bag-charm.jpg"
-            alt="Colorful Mommy Bag charm attached to a woven brown bag"
+            alt="Colorful Mommy Bag charm with red letters attached to a woven brown bag"
+          />
+          <img
+            src="/images/gallery/charm-bar-love-matcha.jpg"
+            alt="Pastel green and pink Love Matcha charm with balloon dog and star details"
           />
         </div>
       </section>

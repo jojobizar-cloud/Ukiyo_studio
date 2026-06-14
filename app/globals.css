@@ -92,9 +92,10 @@ p {
 }
 
 .brand-mark {
-  width: 64px;
-  height: 44px;
+  width: 46px;
+  height: 46px;
   object-fit: contain;
+  flex: 0 0 auto;
 }
 
 .main-nav {
@@ -453,10 +454,10 @@ p {
 
 .gallery-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(280px, 0.72fr);
+  grid-template-columns: minmax(0, 1fr) repeat(2, minmax(220px, 0.72fr));
   gap: 18px;
   align-items: stretch;
-  max-width: 1040px;
+  max-width: 1180px;
   margin: 0 auto;
 }
 
@@ -473,6 +474,10 @@ p {
 }
 
 .gallery-grid img:nth-child(2) {
+  aspect-ratio: 4 / 5;
+}
+
+.gallery-grid img:nth-child(3) {
   aspect-ratio: 4 / 5;
 }
 
@@ -1399,8 +1404,8 @@ p {
   }
 
   .brand-mark {
-    width: 56px;
-    height: 38px;
+    width: 40px;
+    height: 40px;
   }
 
   .main-nav {
