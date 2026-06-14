@@ -85,12 +85,17 @@ export default function Home() {
       <section className="gallery-section" id="gallery">
         <div className="section-copy centered">
           <p className="eyebrow">Gallery</p>
-          <h2>Soft textures, color, and cozy table time</h2>
+          <h2>Custom charms, color, and playful details</h2>
         </div>
         <div className="gallery-grid">
-          <img src="/images/hero-foam-clay.jpeg" alt="Foam clay mirror materials on a table" />
-          <img src="/images/foam-clay-mirror.jpeg" alt="Finished decorated mirror" />
-          <img src="/images/charm-bar.jpeg" alt="Charm bar materials" />
+          <img
+            src="/images/gallery/charm-bar-keychains.jpg"
+            alt="Colorful handmade charm bar keychains spelling Mommy Bag, Love Hateha, and Ukiyo Studio"
+          />
+          <img
+            src="/images/gallery/charm-bar-bag-charm.jpg"
+            alt="Colorful Mommy Bag charm attached to a woven brown bag"
+          />
         </div>
       </section>
 
