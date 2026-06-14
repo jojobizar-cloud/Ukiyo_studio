@@ -5,7 +5,6 @@ export function Header() {
   return (
     <header className="site-header">
       <Link className="brand" href="/" aria-label="Ukiyo Studio home">
-        <img src="/images/ukiyo-logo.svg" alt="" className="brand-mark" />
         <span>Ukiyo Studio</span>
       </Link>
       <nav className="main-nav" aria-label="Main navigation">
