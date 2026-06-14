@@ -47,7 +47,7 @@ export const workshops: Workshop[] = [
     status: "bookable",
     statusLabel: "Book a date",
     image: "/images/foam-clay-mirror.jpeg",
-    imageAlt: "Decorated foam clay mirror with pastel flowers",
+    imageAlt: "Colorful foam clay mirrors with soft clay packets and floral details",
     accent: "clay",
     includes: [
       "Mirror base and foam clay materials",
@@ -100,8 +100,8 @@ export const workshops: Workshop[] = [
     capacityLabel: "Coming soon",
     status: "coming-soon",
     statusLabel: "Coming soon",
-    image: "/images/studio-group-workshop.jpeg",
-    imageAlt: "Small creative workshop group at Ukiyo Studio",
+    image: "/images/tote-bag.jpeg",
+    imageAlt: "Hands painting floral details on a canvas tote bag with fabric markers",
     accent: "tote",
     includes: [
       "Reusable tote bag",
