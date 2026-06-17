@@ -11,6 +11,8 @@ type AdminDashboardProps = {
   data: AdminDashboardData;
 };
 
+type AdminTab = "active" | "archive" | "bookings" | "emails";
+
 type SlotFormState = {
   workshopSlug: string;
   date: string;
@@ -86,7 +88,17 @@ function makeInitialSlotForm(data: AdminDashboardData): SlotFormState {
   };
 }
 
-function SlotEditForm({ slot }: { slot: AdminSlotRow }) {
+function SlotEditForm({
+  slot,
+  workshops,
+}: {
+  slot: AdminSlotRow;
+  workshops: AdminDashboardData["workshops"];
+}) {
+  const [workshopSlug, setWorkshopSlug] = useState(slot.workshopSlug);
+  const [date, setDate] = useState(slot.dateKey);
+  const [startTime, setStartTime] = useState(slot.startTime);
+  const [endTime, setEndTime] = useState(slot.endTime);
   const [capacity, setCapacity] = useState(String(slot.capacity));
   const [priceEuros, setPriceEuros] = useState(toPriceInput(slot.priceCents));
   const [status, setStatus] = useState(slot.status);
@@ -108,9 +120,13 @@ function SlotEditForm({ slot }: { slot: AdminSlotRow }) {
     try {
       const response = await fetch(`/api/admin/slots/${encodeURIComponent(slot.id)}`, {
         body: JSON.stringify({
+          date,
+          endTime,
           capacity: Number(capacity),
           priceCents,
+          startTime,
           status,
+          workshopSlug,
         }),
         headers: {
           "Content-Type": "application/json",
@@ -132,6 +148,47 @@ function SlotEditForm({ slot }: { slot: AdminSlotRow }) {
 
   return (
     <form className="admin-inline-form" onSubmit={saveSlot}>
+      <label>
+        Workshop
+        <select
+          onChange={(event) => setWorkshopSlug(event.target.value)}
+          required
+          value={workshopSlug}
+        >
+          {workshops.map((workshop) => (
+            <option key={workshop.slug} value={workshop.slug}>
+              {workshop.title}
+            </option>
+          ))}
+        </select>
+      </label>
+      <label>
+        Date
+        <input
+          onChange={(event) => setDate(event.target.value)}
+          required
+          type="date"
+          value={date}
+        />
+      </label>
+      <label>
+        Start
+        <input
+          onChange={(event) => setStartTime(event.target.value)}
+          required
+          type="time"
+          value={startTime}
+        />
+      </label>
+      <label>
+        End
+        <input
+          onChange={(event) => setEndTime(event.target.value)}
+          required
+          type="time"
+          value={endTime}
+        />
+      </label>
       <label>
         Capacity
         <input
@@ -168,6 +225,142 @@ function SlotEditForm({ slot }: { slot: AdminSlotRow }) {
       </button>
       {message ? <div className="admin-message is-error">{message}</div> : null}
     </form>
+  );
+}
+
+function SlotDeleteAction({ slot }: { slot: AdminSlotRow }) {
+  const [deleting, setDeleting] = useState(false);
+  const [message, setMessage] = useState<string | null>(null);
+  const canDelete = slot.bookingCount === 0;
+
+  async function deleteSlot() {
+    if (!canDelete) {
+      setMessage("Slots with booking history cannot be deleted.");
+      return;
+    }
+
+    const confirmed = window.confirm(
+      `Delete ${slot.workshopTitle} on ${slot.dateLabel}, ${slot.timeLabel}? This cannot be undone.`,
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    setDeleting(true);
+    setMessage(null);
+
+    try {
+      const response = await fetch(`/api/admin/slots/${encodeURIComponent(slot.id)}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        throw new Error(await parseApiError(response));
+      }
+
+      window.location.reload();
+    } catch (deleteError) {
+      setMessage(
+        deleteError instanceof Error ? deleteError.message : "Could not delete slot.",
+      );
+    } finally {
+      setDeleting(false);
+    }
+  }
+
+  return (
+    <div className="admin-slot-delete">
+      <button
+        className="button button-danger"
+        disabled={deleting || !canDelete}
+        onClick={deleteSlot}
+        type="button"
+      >
+        {deleting ? "Deleting..." : "Delete slot"}
+      </button>
+      {!canDelete ? (
+        <p>This slot has booking history and must stay archived for records.</p>
+      ) : null}
+      {message ? <div className="admin-message is-error">{message}</div> : null}
+    </div>
+  );
+}
+
+function ArchiveCleanupAction({
+  archivedCount,
+  deletableCount,
+}: {
+  archivedCount: number;
+  deletableCount: number;
+}) {
+  const [cleaning, setCleaning] = useState(false);
+  const [message, setMessage] = useState<string | null>(null);
+
+  async function cleanArchive() {
+    const confirmed = window.confirm(
+      "Delete all closed workshop slots that have no booking history? Slots with booking records will be kept.",
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    setCleaning(true);
+    setMessage(null);
+
+    try {
+      const response = await fetch("/api/admin/slots", {
+        body: JSON.stringify({ status: "closed" }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        throw new Error(await parseApiError(response));
+      }
+
+      const result = (await response.json()) as {
+        deletedCount?: number;
+        protectedCount?: number;
+      };
+
+      if ((result.deletedCount ?? 0) > 0) {
+        window.location.reload();
+        return;
+      }
+
+      setMessage(
+        (result.protectedCount ?? 0) > 0
+          ? "No empty archived slots were found. Slots with booking history were kept."
+          : "No archived slots needed cleanup.",
+      );
+    } catch (cleanupError) {
+      setMessage(
+        cleanupError instanceof Error ? cleanupError.message : "Could not clean archive.",
+      );
+    } finally {
+      setCleaning(false);
+    }
+  }
+
+  return (
+    <div className="admin-section-actions">
+      <p>
+        {archivedCount} archived slots, {deletableCount} empty
+      </p>
+      <button
+        className="button button-danger"
+        disabled={cleaning || deletableCount === 0}
+        onClick={cleanArchive}
+        type="button"
+      >
+        {cleaning ? "Cleaning..." : "Delete empty archive"}
+      </button>
+      {message ? <div className="admin-message is-error">{message}</div> : null}
+    </div>
   );
 }
 
@@ -235,11 +428,13 @@ function BookingStatusAction({ booking }: { booking: AdminBookingRow }) {
 }
 
 export function AdminDashboard({ data }: AdminDashboardProps) {
+  const [activeTab, setActiveTab] = useState<AdminTab>("active");
   const [slotForm, setSlotForm] = useState<SlotFormState>(() => makeInitialSlotForm(data));
   const [creating, setCreating] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const currentSlots = data.slots.filter((slot) => slot.status !== "closed");
   const archivedSlots = data.slots.filter((slot) => slot.status === "closed");
+  const deletableArchivedCount = archivedSlots.filter((slot) => slot.bookingCount === 0).length;
 
   const selectedWorkshop = useMemo(
     () => data.workshops.find((workshop) => workshop.slug === slotForm.workshopSlug),
@@ -314,6 +509,45 @@ export function AdminDashboard({ data }: AdminDashboardProps) {
   async function logout() {
     await fetch("/api/admin/logout", { method: "POST" });
     window.location.assign("/admin/login");
+  }
+
+  function renderSlotList(slots: AdminSlotRow[], emptyMessage: string) {
+    return (
+      <div className="admin-slot-list">
+        {slots.map((slot) => (
+          <article className="admin-slot-item" key={slot.id}>
+            <div className="admin-slot-main">
+              <div>
+                <span className={`admin-status is-${slot.status}`}>{slot.status}</span>
+                <h3>{slot.workshopTitle}</h3>
+                <p>
+                  {slot.dateLabel}, {slot.timeLabel}
+                </p>
+              </div>
+              <div className="admin-slot-stats">
+                <span>
+                  <strong>{slot.paidSeats}</strong> booked
+                </span>
+                <span>
+                  <strong>{slot.remainingSeats}</strong> available
+                </span>
+                <span>
+                  <strong>{slot.capacity}</strong> capacity
+                </span>
+                <span>
+                  <strong>{slot.bookingCount}</strong> records
+                </span>
+              </div>
+            </div>
+            <div className="admin-slot-controls">
+              <SlotEditForm slot={slot} workshops={data.workshops} />
+              <SlotDeleteAction slot={slot} />
+            </div>
+          </article>
+        ))}
+        {slots.length === 0 ? <div className="admin-empty">{emptyMessage}</div> : null}
+      </div>
+    );
   }
 
   return (
@@ -455,86 +689,68 @@ export function AdminDashboard({ data }: AdminDashboardProps) {
         {message ? <div className="admin-message is-error">{message}</div> : null}
       </section>
 
-      <section className="admin-section">
-        <div className="admin-section-header">
-          <div>
-            <p className="eyebrow">Planning</p>
-            <h2>Active workshop slots</h2>
-          </div>
-          <p>{currentSlots.length} active slots</p>
-        </div>
-        <div className="admin-slot-list">
-          {currentSlots.map((slot) => (
-            <article className="admin-slot-item" key={slot.id}>
-              <div className="admin-slot-main">
-                <div>
-                  <span className={`admin-status is-${slot.status}`}>{slot.status}</span>
-                  <h3>{slot.workshopTitle}</h3>
-                  <p>
-                    {slot.dateLabel}, {slot.timeLabel}
-                  </p>
-                </div>
-                <div className="admin-slot-stats">
-                  <span>
-                    <strong>{slot.paidSeats}</strong> booked
-                  </span>
-                  <span>
-                    <strong>{slot.remainingSeats}</strong> available
-                  </span>
-                  <span>
-                    <strong>{slot.capacity}</strong> capacity
-                  </span>
-                </div>
-              </div>
-              <SlotEditForm slot={slot} />
-            </article>
-          ))}
-          {currentSlots.length === 0 ? <div className="admin-empty">No active slots.</div> : null}
-        </div>
-      </section>
+      <nav className="admin-tabs" aria-label="Admin dashboard sections">
+        <button
+          className={activeTab === "active" ? "is-active" : ""}
+          onClick={() => setActiveTab("active")}
+          type="button"
+        >
+          Active slots <span>{currentSlots.length}</span>
+        </button>
+        <button
+          className={activeTab === "archive" ? "is-active" : ""}
+          onClick={() => setActiveTab("archive")}
+          type="button"
+        >
+          Archive <span>{archivedSlots.length}</span>
+        </button>
+        <button
+          className={activeTab === "bookings" ? "is-active" : ""}
+          onClick={() => setActiveTab("bookings")}
+          type="button"
+        >
+          Bookings <span>{data.bookings.length}</span>
+        </button>
+        <button
+          className={activeTab === "emails" ? "is-active" : ""}
+          onClick={() => setActiveTab("emails")}
+          type="button"
+        >
+          Email <span>{data.emails.length}</span>
+        </button>
+      </nav>
 
-      <section className="admin-section">
-        <div className="admin-section-header">
-          <div>
-            <p className="eyebrow">Archive</p>
-            <h2>Closed workshop slots</h2>
+      {activeTab === "active" ? (
+        <section className="admin-section">
+          <div className="admin-section-header">
+            <div>
+              <p className="eyebrow">Planning</p>
+              <h2>Active workshop slots</h2>
+            </div>
+            <p>{currentSlots.length} active slots</p>
           </div>
-          <p>{archivedSlots.length} archived slots</p>
-        </div>
-        {archivedSlots.length > 0 ? (
-          <div className="admin-slot-list compact">
-            {archivedSlots.map((slot) => (
-              <article className="admin-slot-item" key={slot.id}>
-                <div className="admin-slot-main">
-                  <div>
-                    <span className={`admin-status is-${slot.status}`}>{slot.status}</span>
-                    <h3>{slot.workshopTitle}</h3>
-                    <p>
-                      {slot.dateLabel}, {slot.timeLabel}
-                    </p>
-                  </div>
-                  <div className="admin-slot-stats">
-                    <span>
-                      <strong>{slot.paidSeats}</strong> booked
-                    </span>
-                    <span>
-                      <strong>{slot.remainingSeats}</strong> available
-                    </span>
-                    <span>
-                      <strong>{slot.capacity}</strong> capacity
-                    </span>
-                  </div>
-                </div>
-                <SlotEditForm slot={slot} />
-              </article>
-            ))}
-          </div>
-        ) : (
-          <div className="admin-empty">No closed slots are archived yet.</div>
-        )}
-      </section>
+          {renderSlotList(currentSlots, "No active slots.")}
+        </section>
+      ) : null}
 
-      <section className="admin-section">
+      {activeTab === "archive" ? (
+        <section className="admin-section">
+          <div className="admin-section-header">
+            <div>
+              <p className="eyebrow">Archive</p>
+              <h2>Closed workshop slots</h2>
+            </div>
+            <ArchiveCleanupAction
+              archivedCount={archivedSlots.length}
+              deletableCount={deletableArchivedCount}
+            />
+          </div>
+          {renderSlotList(archivedSlots, "No closed slots are archived yet.")}
+        </section>
+      ) : null}
+
+      {activeTab === "bookings" ? (
+        <section className="admin-section">
         <div className="admin-section-header">
           <div>
             <p className="eyebrow">Payments</p>
@@ -599,9 +815,11 @@ export function AdminDashboard({ data }: AdminDashboardProps) {
         ) : (
           <div className="admin-empty">No paid bookings yet.</div>
         )}
-      </section>
+        </section>
+      ) : null}
 
-      <section className="admin-section">
+      {activeTab === "emails" ? (
+        <section className="admin-section">
         <div className="admin-section-header">
           <div>
             <p className="eyebrow">Email</p>
@@ -647,7 +865,8 @@ export function AdminDashboard({ data }: AdminDashboardProps) {
             No email records yet. The local outbox will fill after a paid booking is confirmed.
           </div>
         )}
-      </section>
+        </section>
+      ) : null}
     </div>
   );
 }

@@ -25,11 +25,15 @@ export type AdminSlotRow = {
   workshopTitle: string;
   startsAt: string;
   endsAt: string;
+  dateKey: string;
+  startTime: string;
+  endTime: string;
   dateLabel: string;
   timeLabel: string;
   capacity: number;
   paidSeats: number;
   remainingSeats: number;
+  bookingCount: number;
   priceCents: number;
   currency: string;
   status: BookingSlotStatus;
@@ -127,6 +131,15 @@ export async function getAdminDashboardData(): Promise<AdminDashboardData> {
   const now = new Date();
   const store = await readBookingStore(now);
   const emailOutbox = await readEmailOutbox();
+  const bookingCountBySlotId = new Map<string, number>();
+
+  for (const booking of store.bookings) {
+    bookingCountBySlotId.set(
+      booking.slotId,
+      (bookingCountBySlotId.get(booking.slotId) ?? 0) + 1,
+    );
+  }
+
   const slots = store.slots
     .map((slot) => {
       const workshop = getWorkshop(slot.workshopSlug);
@@ -138,11 +151,15 @@ export async function getAdminDashboardData(): Promise<AdminDashboardData> {
         workshopTitle: workshop?.title ?? slot.workshopSlug,
         startsAt: slot.startsAt,
         endsAt: slot.endsAt,
+        dateKey: slot.startsAt.slice(0, 10),
+        startTime: slot.startsAt.slice(11, 16),
+        endTime: slot.endsAt.slice(11, 16),
         dateLabel: availability.dateLabel,
         timeLabel: availability.timeLabel,
         capacity: availability.capacity,
         paidSeats: availability.paidSeats,
         remainingSeats: availability.remainingSeats,
+        bookingCount: bookingCountBySlotId.get(slot.id) ?? 0,
         priceCents: availability.priceCents,
         currency: availability.currency,
         status: availability.status,

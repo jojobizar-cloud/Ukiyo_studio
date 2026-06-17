@@ -213,6 +213,18 @@ p {
   border-color: rgba(66, 81, 57, 0.24);
 }
 
+.button-danger {
+  background: var(--ink);
+  color: var(--paper-light);
+  border-color: var(--ink);
+}
+
+.button-danger:hover,
+.button-danger:focus-visible {
+  background: var(--clay-dark);
+  border-color: var(--clay-dark);
+}
+
 .full-width {
   width: 100%;
 }
@@ -1092,6 +1104,49 @@ p {
   justify-content: flex-end;
 }
 
+.admin-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 8px;
+  background: rgba(255, 250, 243, 0.7);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.admin-tabs button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 8px 16px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  color: var(--moss-dark);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.admin-tabs button.is-active {
+  background: #ffffff;
+  border-color: rgba(66, 81, 57, 0.18);
+  box-shadow: 0 8px 22px rgba(31, 33, 29, 0.07);
+}
+
+.admin-tabs span {
+  min-width: 26px;
+  padding: 3px 7px;
+  background: var(--moss);
+  border-radius: 999px;
+  color: var(--paper-light);
+  font-size: 0.72rem;
+}
+
 .admin-summary-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -1136,6 +1191,18 @@ p {
 
 .admin-section-header {
   margin-bottom: 22px;
+}
+
+.admin-section-actions {
+  display: grid;
+  justify-items: end;
+  gap: 10px;
+  max-width: 360px;
+}
+
+.admin-section-actions .button {
+  min-height: 40px;
+  padding: 8px 14px;
 }
 
 .admin-section h2 {
@@ -1216,9 +1283,9 @@ p {
 
 .admin-slot-stats {
   display: grid;
-  grid-template-columns: repeat(3, minmax(86px, 1fr));
+  grid-template-columns: repeat(4, minmax(82px, 1fr));
   gap: 8px;
-  min-width: min(520px, 100%);
+  min-width: min(620px, 100%);
 }
 
 .admin-slot-stats span {
@@ -1240,10 +1307,36 @@ p {
 }
 
 .admin-inline-form {
-  grid-template-columns: repeat(3, minmax(100px, 1fr)) minmax(110px, auto);
+  grid-template-columns:
+    minmax(180px, 1.4fr)
+    repeat(6, minmax(96px, 1fr))
+    minmax(110px, auto);
   align-items: end;
+}
+
+.admin-slot-controls {
+  display: grid;
+  gap: 14px;
   padding-top: 16px;
   border-top: 1px solid var(--line);
+}
+
+.admin-slot-delete {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.admin-slot-delete .button {
+  min-height: 40px;
+  padding: 8px 14px;
+}
+
+.admin-slot-delete p {
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 800;
 }
 
 .admin-table-wrap {
@@ -1492,11 +1585,26 @@ p {
     width: 100%;
   }
 
+  .admin-tabs button {
+    flex: 1 1 150px;
+  }
+
+  .admin-section-actions {
+    justify-items: stretch;
+    width: 100%;
+    max-width: none;
+  }
+
   .admin-summary-grid,
   .admin-slot-form,
   .admin-inline-form,
   .admin-slot-stats {
     grid-template-columns: 1fr;
+  }
+
+  .admin-slot-delete {
+    align-items: stretch;
+    flex-direction: column;
   }
 
   .detail-hero-copy h1,

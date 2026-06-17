@@ -13,6 +13,10 @@ export type CreateSlotInput = {
 };
 
 export type UpdateSlotInput = {
+  workshopSlug?: unknown;
+  date?: unknown;
+  startTime?: unknown;
+  endTime?: unknown;
   capacity?: unknown;
   priceCents?: unknown;
   status?: unknown;
@@ -65,37 +69,52 @@ function parseSlotStatus(value: unknown): BookingSlotStatus {
   throw new Error("Status must be open or closed.");
 }
 
-export function parseCreateSlotInput(input: CreateSlotInput) {
-  if (typeof input.workshopSlug !== "string") {
+function parseWorkshopSlug(value: unknown) {
+  if (typeof value !== "string") {
     throw new Error("Choose a workshop type.");
   }
 
-  const workshop = getWorkshop(input.workshopSlug);
+  const workshop = getWorkshop(value);
 
   if (!workshop || workshop.status !== "bookable") {
     throw new Error("This workshop type is not open for booking.");
   }
 
-  if (typeof input.date !== "string" || !isValidDateKey(input.date)) {
+  return workshop.slug;
+}
+
+function parseSlotDateTimes(date: unknown, startTime: unknown, endTime: unknown) {
+  if (typeof date !== "string" || !isValidDateKey(date)) {
     throw new Error("Choose a valid date.");
   }
 
-  if (typeof input.startTime !== "string" || !isValidTime(input.startTime)) {
+  if (typeof startTime !== "string" || !isValidTime(startTime)) {
     throw new Error("Choose a valid start time.");
   }
 
-  if (typeof input.endTime !== "string" || !isValidTime(input.endTime)) {
+  if (typeof endTime !== "string" || !isValidTime(endTime)) {
     throw new Error("Choose a valid end time.");
   }
 
-  const capacity = parseInteger(input.capacity, "Capacity", 1, 50);
-  const priceCents = parseInteger(input.priceCents, "Price", 0, 50000);
-  const startsAt = amsterdamLocalDateTimeToIso(input.date, input.startTime);
-  const endsAt = amsterdamLocalDateTimeToIso(input.date, input.endTime);
+  const startsAt = amsterdamLocalDateTimeToIso(date, startTime);
+  const endsAt = amsterdamLocalDateTimeToIso(date, endTime);
 
   if (new Date(endsAt).getTime() <= new Date(startsAt).getTime()) {
     throw new Error("End time must be later than start time.");
   }
+
+  return { endsAt, startsAt };
+}
+
+export function parseCreateSlotInput(input: CreateSlotInput) {
+  const workshopSlug = parseWorkshopSlug(input.workshopSlug);
+  const { endsAt, startsAt } = parseSlotDateTimes(
+    input.date,
+    input.startTime,
+    input.endTime,
+  );
+  const capacity = parseInteger(input.capacity, "Capacity", 1, 50);
+  const priceCents = parseInteger(input.priceCents, "Price", 0, 50000);
 
   return {
     capacity,
@@ -104,16 +123,33 @@ export function parseCreateSlotInput(input: CreateSlotInput) {
     priceCents,
     startsAt,
     status: parseSlotStatus(input.status),
-    workshopSlug: workshop.slug,
+    workshopSlug,
   };
 }
 
 export function parseUpdateSlotInput(input: UpdateSlotInput) {
   const update: {
+    workshopSlug?: string;
+    startsAt?: string;
+    endsAt?: string;
     capacity?: number;
     priceCents?: number;
     status?: BookingSlotStatus;
   } = {};
+
+  if (input.workshopSlug !== undefined) {
+    update.workshopSlug = parseWorkshopSlug(input.workshopSlug);
+  }
+
+  if (input.date !== undefined || input.startTime !== undefined || input.endTime !== undefined) {
+    const { endsAt, startsAt } = parseSlotDateTimes(
+      input.date,
+      input.startTime,
+      input.endTime,
+    );
+    update.endsAt = endsAt;
+    update.startsAt = startsAt;
+  }
 
   if (input.capacity !== undefined) {
     update.capacity = parseInteger(input.capacity, "Capacity", 1, 50);
@@ -127,7 +163,13 @@ export function parseUpdateSlotInput(input: UpdateSlotInput) {
     update.status = parseSlotStatus(input.status);
   }
 
-  if (!("capacity" in update) && !("priceCents" in update) && !("status" in update)) {
+  if (
+    !("workshopSlug" in update) &&
+    !("startsAt" in update) &&
+    !("capacity" in update) &&
+    !("priceCents" in update) &&
+    !("status" in update)
+  ) {
     throw new Error("No slot changes were provided.");
   }
 

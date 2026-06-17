@@ -62,3 +62,47 @@ export async function POST(request: Request) {
     );
   }
 }
+
+export async function DELETE(request: Request) {
+  if (!(await isAdminAuthenticated())) {
+    return NextResponse.json({ error: "Admin login required." }, { status: 401 });
+  }
+
+  const body = await readBody(request);
+
+  if (body && typeof body === "object" && "status" in body && body.status !== "closed") {
+    return NextResponse.json(
+      { error: "Bulk slot cleanup only supports closed slots." },
+      { status: 400 },
+    );
+  }
+
+  const result = await updateBookingStore((store) => {
+    const closedSlotIds = new Set(
+      store.slots.filter((slot) => slot.status === "closed").map((slot) => slot.id),
+    );
+    const protectedSlotIds = new Set(
+      store.bookings
+        .filter((booking) => closedSlotIds.has(booking.slotId))
+        .map((booking) => booking.slotId),
+    );
+    const deletableSlotIds = new Set(
+      store.slots
+        .filter((slot) => slot.status === "closed" && !protectedSlotIds.has(slot.id))
+        .map((slot) => slot.id),
+    );
+
+    store.slots = store.slots.filter((slot) => !deletableSlotIds.has(slot.id));
+    store.holds = store.holds.filter((hold) => !deletableSlotIds.has(hold.slotId));
+
+    return {
+      payload: {
+        deletedCount: deletableSlotIds.size,
+        protectedCount: protectedSlotIds.size,
+      },
+      status: 200,
+    };
+  });
+
+  return NextResponse.json(result.payload, { status: result.status });
+}
