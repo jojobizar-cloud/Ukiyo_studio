@@ -13,6 +13,7 @@ function getAdminPassword() {
 function getSessionSecret() {
   return (
     process.env.ADMIN_SESSION_SECRET?.trim() ||
+    process.env.STRIPE_RK?.trim() ||
     process.env.STRIPE_SECRET_KEY?.trim() ||
     getAdminPassword()
   );
