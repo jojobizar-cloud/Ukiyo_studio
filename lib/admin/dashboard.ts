@@ -103,12 +103,12 @@ const adminWorkshopDefaults: Record<
 > = {
   "charm-bar": {
     defaultCapacity: 10,
-    defaultDurationMinutes: 90,
+    defaultDurationMinutes: 45,
     defaultPriceCents: 1500,
   },
   "foam-clay-mirror": {
     defaultCapacity: 10,
-    defaultDurationMinutes: 150,
+    defaultDurationMinutes: 120,
     defaultPriceCents: 4000,
   },
 };

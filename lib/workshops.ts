@@ -45,7 +45,7 @@ export const workshops: Workshop[] = [
     longDescription:
       "Create a playful mirror with soft clay florals, textures, and color combinations that feel personal to you. The session is designed to be calm and beginner friendly, with guidance, examples, and all materials prepared before you arrive.",
     priceLabel: "EUR 40 per person",
-    durationLabel: "2.5 hours",
+    durationLabel: "2 hours",
     capacityLabel: "Max 10 people",
     status: "bookable",
     statusLabel: "Book a date",
@@ -74,7 +74,7 @@ export const workshops: Workshop[] = [
     longDescription:
       "Mix letters, colors, beads, clips, cords, and tiny details to create a bag charm that feels completely yours. The format is easy to join, social, and ideal for a lighter creative session.",
     priceLabel: "EUR 15 per person",
-    durationLabel: "90 minutes",
+    durationLabel: "30-45 minutes",
     capacityLabel: "Max 10 people",
     status: "bookable",
     statusLabel: "Book a date",
