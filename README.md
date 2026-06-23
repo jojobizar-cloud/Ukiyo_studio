@@ -59,12 +59,16 @@ EMAIL_PROVIDER=local
 EMAIL_FROM="Ukiyo Studio <bookings@ukiyostudioehv.nl>"
 BOOKING_NOTIFICATION_EMAIL=your-owner-email@example.com
 CONTACT_TO_EMAIL=ukiyostudioehv@outlook.com
+STUDIO_CONTACT_PHONE=+31...
 RESEND_API_KEY=re_...
 ```
 
 Use `EMAIL_PROVIDER=local` during development. Local email previews are written to `data/email-outbox.local.json`, which is ignored by Git.
 
 Use `EMAIL_PROVIDER=resend` with `RESEND_API_KEY` after the sender domain is verified in Resend.
+
+`STUDIO_CONTACT_PHONE` is server-only and appears only in paid customers' booking
+confirmation emails. It is not rendered on public website pages.
 
 Webhook endpoint:
 

@@ -34,6 +34,7 @@ export async function sendBookingEmails(bookingId: string) {
   const from = getEmailFromAddress();
   const deliveries: Array<EmailDeliveryRecord | null> = [];
   const customerEmail = normalizeRecipient(booking.customerEmail);
+  const ownerEmail = normalizeRecipient(getBookingNotificationEmail());
 
   if (customerEmail) {
     const confirmation = createCustomerBookingConfirmation(context);
@@ -44,12 +45,11 @@ export async function sendBookingEmails(bookingId: string) {
         from,
         idempotencyKey: `booking-confirmation:${booking.id}`,
         kind: "booking-confirmation",
+        replyTo: ownerEmail ?? undefined,
         to: [customerEmail],
       }),
     );
   }
-
-  const ownerEmail = normalizeRecipient(getBookingNotificationEmail());
 
   if (ownerEmail) {
     const notification = createOwnerBookingNotification(context);

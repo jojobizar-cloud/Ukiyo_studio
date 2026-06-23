@@ -4,6 +4,7 @@ import type {
   BookingSlotRecord,
   BookingStoreData,
 } from "@/lib/booking/types";
+import { getStudioContactPhone } from "@/lib/email/config";
 import { studioLocation, getWorkshop } from "@/lib/workshops";
 
 type BookingEmailContext = {
@@ -63,6 +64,7 @@ function renderHtml(title: string, lines: string[]) {
 
 export function createCustomerBookingConfirmation(context: BookingEmailContext) {
   const details = getBookingDetails(context);
+  const studioPhone = getStudioContactPhone();
   const subject = `Your Ukiyo Studio booking is confirmed`;
   const lines = [
     `Thank you for booking ${details.workshopTitle}.`,
@@ -70,6 +72,12 @@ export function createCustomerBookingConfirmation(context: BookingEmailContext) 
     `Seats: ${details.seats}.`,
     `Amount paid: ${details.amount}.`,
     `Location: ${details.location}.`,
+    "Getting to the studio:",
+    "Ukiyo Studio is located inside a shared business building.",
+    studioPhone
+      ? `When you arrive at the entrance, text or call ${studioPhone}. We will unlock the door remotely for you.`
+      : "If the entrance is closed, reply to this email before your workshop so we can arrange access.",
+    "Once inside, take the stairs or elevator to the first floor. We will meet you there.",
     `Booking reference: ${details.bookingReference}.`,
     "Refund possible when cancelled at least 48 hours before the workshop.",
   ];

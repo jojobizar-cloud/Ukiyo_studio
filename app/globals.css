@@ -1049,6 +1049,31 @@ p {
   line-height: 1.35;
 }
 
+.booking-result-arrival {
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(255, 250, 243, 0.24);
+}
+
+.booking-result-arrival h2 {
+  margin-bottom: 10px;
+  color: var(--paper-light);
+  font-size: 1.45rem;
+}
+
+.booking-result-location .booking-result-arrival p {
+  max-width: 520px;
+  margin-bottom: 8px;
+  color: rgba(255, 250, 243, 0.82);
+  font-family: var(--sans);
+  font-size: 0.86rem;
+  line-height: 1.5;
+}
+
+.booking-result-location .booking-result-arrival p:last-child {
+  margin-bottom: 0;
+}
+
 .contact-modal {
   position: fixed;
   inset: 0;
@@ -1697,6 +1722,7 @@ p {
 
 @media (min-width: 761px) and (max-height: 700px) {
   .booking-result-copy {
+    justify-content: flex-start;
     padding: 24px clamp(28px, 5vw, 48px);
   }
 
@@ -1765,6 +1791,22 @@ p {
   .booking-result-location {
     padding-top: 16px;
     padding-bottom: 18px;
+  }
+
+  .booking-result-arrival {
+    margin-top: 12px;
+    padding-top: 12px;
+  }
+
+  .booking-result-arrival h2 {
+    margin-bottom: 6px;
+    font-size: 1.15rem;
+  }
+
+  .booking-result-location .booking-result-arrival p {
+    margin-bottom: 4px;
+    font-size: 0.72rem;
+    line-height: 1.4;
   }
 }
 

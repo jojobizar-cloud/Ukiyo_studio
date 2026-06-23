@@ -32,6 +32,10 @@ export function getBookingNotificationEmail() {
   return getTrimmedEnv("BOOKING_NOTIFICATION_EMAIL");
 }
 
+export function getStudioContactPhone() {
+  return getTrimmedEnv("STUDIO_CONTACT_PHONE");
+}
+
 export function getResendApiKey() {
   return getTrimmedEnv("RESEND_API_KEY") || getTrimmedEnv("resend_api");
 }
