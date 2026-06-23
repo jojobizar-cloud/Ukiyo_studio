@@ -155,12 +155,15 @@ export default async function BookingSuccessPage({ searchParams }: BookingSucces
             <p>{studioLocation.postalCity}</p>
             <div className="booking-result-arrival">
               <h2>Getting to the studio</h2>
-              <p>Ukiyo Studio is located inside a shared business building.</p>
+              <p>Ukiyo Studio is inside a shared business building.</p>
               <p>
-                At the entrance, use the private arrival contact details in your confirmation
-                email. We will unlock the door remotely for you.
+                When you arrive at the main entrance, call or text the private phone number in
+                your booking confirmation email. We will unlock the door remotely for you.
               </p>
-              <p>Take the stairs or elevator to the first floor. We will meet you there.</p>
+              <p>
+                Once inside, take the stairs or elevator to the first floor. We will meet you
+                there. Keep your confirmation email handy when you arrive.
+              </p>
             </div>
           </div>
         </div>
