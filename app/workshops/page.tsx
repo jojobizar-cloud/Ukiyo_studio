@@ -5,7 +5,7 @@ import { workshops } from "@/lib/workshops";
 export const metadata: Metadata = {
   title: "Workshops",
   description:
-    "Explore Ukiyo Studio creative workshops in Eindhoven, including Foam Clay Mirror, Charm Bar, and coming-soon tote bag workshops.",
+    "Explore Ukiyo Studio creative workshops in Eindhoven: the Halloween edition, Foam Clay Mirror Workshop and Charm Bar Experience.",
 };
 
 export default function WorkshopsPage() {

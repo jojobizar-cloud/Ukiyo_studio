@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { siInstagram } from "simple-icons";
 import { ContactNavButton } from "@/components/ContactNavButton";
 
 export function Header() {
@@ -21,6 +22,21 @@ export function Header() {
           Group bookings
         </ContactNavButton>
         <ContactNavButton />
+        <a
+          className="instagram-link"
+          href="https://www.instagram.com/ukiyostudio_ehv/"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Ukiyo Studio on Instagram (opens in a new tab)"
+          title="Follow @ukiyostudio_ehv on Instagram"
+        >
+          <span className="instagram-icon">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d={siInstagram.path} />
+            </svg>
+          </span>
+          <span className="instagram-label">Instagram</span>
+        </a>
       </nav>
     </header>
   );

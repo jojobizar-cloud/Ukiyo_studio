@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { studioLocation } from "@/lib/workshops";
+import { studioLocation, workshops } from "@/lib/workshops";
 
 export function Footer() {
   return (
@@ -22,9 +22,11 @@ export function Footer() {
       </div>
       <div>
         <p className="eyebrow">Workshops</p>
-        <Link href="/workshops/foam-clay-mirror">Foam Clay Mirror Workshop</Link>
-        <Link href="/workshops/charm-bar">Charm Bar Experience</Link>
-        <Link href="/workshops/paint-a-tote-bag">Paint a Tote Bag</Link>
+        {workshops.map((workshop) => (
+          <Link href={`/workshops/${workshop.slug}`} key={workshop.slug}>
+            {workshop.title}
+          </Link>
+        ))}
       </div>
       <div>
         <p className="eyebrow">Practical</p>

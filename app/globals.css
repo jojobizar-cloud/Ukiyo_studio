@@ -125,6 +125,53 @@ p {
   font-weight: 700;
 }
 
+.main-nav .instagram-link {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  border: 0;
+  color: #923657;
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+
+.instagram-icon {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+  border: 2px solid transparent;
+  border-radius: 50%;
+  background:
+    linear-gradient(var(--paper-light), var(--paper-light)) padding-box,
+    linear-gradient(35deg, #f5b94c, #dd4167 48%, #9954a4) border-box;
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.instagram-link:hover .instagram-icon {
+  transform: rotate(-8deg);
+  box-shadow: 0 3px 12px rgba(189, 111, 134, 0.25);
+}
+
+.instagram-link:focus-visible {
+  outline: 2px solid #923657;
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .instagram-icon {
+    transition: none;
+  }
+
+  .instagram-link:hover .instagram-icon {
+    transform: none;
+  }
+}
+
 .hero {
   min-height: calc(100vh - 72px);
   display: flex;
@@ -238,8 +285,8 @@ p {
 
 .intro-section {
   display: grid;
-  grid-template-columns: minmax(260px, 0.8fr) minmax(0, 1.6fr);
-  gap: clamp(40px, 7vw, 90px);
+  grid-template-columns: minmax(250px, 0.65fr) minmax(0, 1.9fr);
+  gap: clamp(32px, 4vw, 64px);
   align-items: center;
   background: var(--paper);
 }
@@ -351,9 +398,13 @@ p {
 }
 
 .workshop-card-copy h3 {
-  min-height: 2.2em;
   margin-bottom: 0;
-  font-size: clamp(1.45rem, 2vw, 2rem);
+  font-size: 1.8rem;
+  overflow-wrap: break-word;
+}
+
+.workshop-card-heading {
+  min-height: 4rem;
 }
 
 .workshop-card-copy p:not(.eyebrow) {
@@ -387,8 +438,12 @@ p {
   background: #8d4962;
 }
 
-.accent-tote .status-pill {
-  background: var(--blue);
+.accent-halloween .status-pill {
+  background: #78432c;
+}
+
+.workshop-card.accent-halloween {
+  border-color: rgba(154, 72, 40, 0.35);
 }
 
 .statement-section {
@@ -484,32 +539,29 @@ p {
 }
 
 .gallery-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) repeat(2, minmax(220px, 0.72fr));
-  gap: 18px;
-  align-items: stretch;
+  columns: 3;
+  column-gap: 18px;
   max-width: 1180px;
   margin: 0 auto;
 }
 
+.gallery-photo {
+  display: block;
+  margin-bottom: 18px;
+  break-inside: avoid;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: zoom-in;
+}
+
+.gallery-photo:focus-visible {
+  outline: 3px solid var(--moss-dark);
+  outline-offset: 4px;
+}
+
 .gallery-grid img {
   width: 100%;
-  height: 100%;
-  min-height: clamp(360px, 42vw, 560px);
-  object-fit: cover;
-  border-radius: 8px;
-}
-
-.gallery-grid img:first-child {
-  aspect-ratio: 1 / 1;
-}
-
-.gallery-grid img:nth-child(2) {
-  aspect-ratio: 4 / 5;
-}
-
-.gallery-grid img:nth-child(3) {
-  aspect-ratio: 4 / 5;
+  height: auto;
 }
 
 .visit-section {
@@ -561,8 +613,8 @@ p {
   background: #fbeced;
 }
 
-.workshop-detail-hero.accent-tote {
-  background: #edf3f4;
+.workshop-detail-hero.accent-halloween {
+  background: #f5e9dd;
 }
 
 .detail-hero-copy h1 {
@@ -947,6 +999,26 @@ p {
   color: var(--muted);
   font-size: 1.12rem;
   font-weight: 700;
+}
+
+.workshop-card-copy p.workshop-card-subtitle {
+  margin-top: 8px;
+  color: var(--clay-dark);
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+.detail-hero-copy p.detail-subtitle {
+  margin-bottom: 18px;
+  color: var(--clay-dark);
+  font-family: var(--serif);
+  font-size: 1.75rem;
+  font-weight: 400;
+  line-height: 1.25;
+}
+
+.booking-state .button {
+  margin-top: 16px;
 }
 
 .booking-result-details {
@@ -1678,10 +1750,6 @@ p {
     grid-template-columns: 1fr;
   }
 
-  .workshop-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
   .booking-panel {
     position: static;
   }
@@ -1825,6 +1893,10 @@ p {
     font-size: 0.82rem;
   }
 
+  .instagram-label {
+    display: none;
+  }
+
   .hero {
     min-height: 650px;
     padding: 54px 20px;
@@ -1856,18 +1928,22 @@ p {
 
   .workshop-grid,
   .feature-row,
-  .gallery-grid,
   .split-list,
   .site-footer {
     grid-template-columns: 1fr;
   }
 
-  .workshop-card-copy h3 {
+  .workshop-card-heading {
     min-height: 0;
   }
 
-  .gallery-grid img {
-    min-height: 260px;
+  .gallery-grid {
+    columns: 2;
+    column-gap: 12px;
+  }
+
+  .gallery-photo {
+    margin-bottom: 12px;
   }
 
   .visit-section {

@@ -105,6 +105,18 @@ function SlotEditForm({
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
 
+  function changeWorkshop(nextSlug: string) {
+    const workshop = workshops.find((candidate) => candidate.slug === nextSlug);
+
+    if (!workshop) {
+      return;
+    }
+
+    setWorkshopSlug(nextSlug);
+    setPriceEuros(toPriceInput(workshop.defaultPriceCents));
+    setEndTime(addMinutesToTime(startTime, workshop.defaultDurationMinutes));
+  }
+
   async function saveSlot(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const priceCents = parseEuroCents(priceEuros);
@@ -151,7 +163,7 @@ function SlotEditForm({
       <label>
         Workshop
         <select
-          onChange={(event) => setWorkshopSlug(event.target.value)}
+          onChange={(event) => changeWorkshop(event.target.value)}
           required
           value={workshopSlug}
         >

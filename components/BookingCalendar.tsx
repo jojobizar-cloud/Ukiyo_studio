@@ -1,8 +1,9 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { ContactNavButton } from "@/components/ContactNavButton";
 import type { PublicSlotAvailability } from "@/lib/booking/types";
-import type { WorkshopStatus } from "@/lib/workshops";
+import { getWorkshop, type WorkshopStatus } from "@/lib/workshops";
 
 type BookingCalendarProps = {
   workshopSlug: string;
@@ -255,9 +256,16 @@ export function BookingCalendar({ workshopSlug, workshopStatus }: BookingCalenda
 
       {loading ? <div className="booking-state">Loading available dates...</div> : null}
 
-      {!loading && slots.length === 0 ? (
+      {!loading && !error && slots.length === 0 ? (
         <div className="booking-state">
-          No dates are open yet. New workshop slots can be added from the admin tools phase.
+          <p>No dates are open yet. Get in touch for upcoming dates or a private group workshop.</p>
+          <ContactNavButton
+            className="button button-soft"
+            subject="Upcoming workshop dates"
+            workshop={getWorkshop(workshopSlug)?.title}
+          >
+            Ask about dates
+          </ContactNavButton>
         </div>
       ) : null}
 

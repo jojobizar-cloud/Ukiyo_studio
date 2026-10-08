@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";
+import { workshops } from "@/lib/workshops";
 
 type ContactFormState = {
   email: string;
@@ -172,9 +173,11 @@ export function ContactFormLauncher() {
                   value={form.workshop}
                 >
                   <option value="">General question</option>
-                  <option value="Foam Clay Mirror Workshop">Foam Clay Mirror Workshop</option>
-                  <option value="Charm Bar Experience">Charm Bar Experience</option>
-                  <option value="Paint a Tote Bag">Paint a Tote Bag</option>
+                  {workshops.map((workshop) => (
+                    <option key={workshop.slug} value={workshop.title}>
+                      {workshop.title}
+                    </option>
+                  ))}
                   <option value="Private group or event">Private group or event</option>
                 </select>
               </label>

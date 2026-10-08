@@ -3,14 +3,16 @@ export type WorkshopStatus = "bookable" | "coming-soon";
 export type Workshop = {
   slug: string;
   title: string;
+  subtitle?: string;
   navTitle: string;
   tagline: string;
   cardDescription: string;
   shortDescription: string;
   longDescription: string;
-  priceLabel: string;
+  priceCents: number;
   durationLabel: string;
-  capacityLabel: string;
+  durationMinutes: number;
+  capacity: number;
   status: WorkshopStatus;
   statusLabel: string;
   image: string;
@@ -34,6 +36,39 @@ export const studioLocation = {
 
 export const workshops: Workshop[] = [
   {
+    slug: "halloween-edition",
+    title: "Halloween edition",
+    subtitle: "Soft clay mirror workshop",
+    navTitle: "Halloween special",
+    tagline:
+      "Decorate a mirror with soft clay and spooky details like pumpkins, ghosts, cats and witch hats. A playful Halloween edition with snacks and Pumpkin Spice Latte included.",
+    cardDescription:
+      "Decorate a mirror with soft clay and spooky details like pumpkins, ghosts, cats and witch hats. A playful Halloween edition with snacks and Pumpkin Spice Latte included.",
+    shortDescription:
+      "A Halloween soft clay mirror workshop in Eindhoven, with spooky decorations, snacks and Pumpkin Spice Latte included. EUR 45 per person.",
+    longDescription:
+      "Give your mirror a playful Halloween makeover with soft foam clay. Shape pumpkins, friendly ghosts, cats and witch hats, then arrange them around your mirror in your own style. We will guide you through the techniques and help bring your ideas to life. Settle in with snacks and a Pumpkin Spice Latte while you create a seasonal piece to take home. No experience is needed, and all materials are included.",
+    priceCents: 4500,
+    durationLabel: "2 hours",
+    durationMinutes: 120,
+    capacity: 10,
+    status: "bookable",
+    statusLabel: "Book a date",
+    image: "/images/halloween-clay-mirror.jpg",
+    imageAlt:
+      "Halloween mirror decorated with soft clay pumpkins, ghosts, black cats and witch hats",
+    accent: "halloween",
+    includes: [
+      "Mirror base, soft foam clay and studio tools",
+      "Halloween inspiration and step-by-step guidance",
+      "Snacks and a Pumpkin Spice Latte",
+      "Your finished Halloween mirror to take home",
+    ],
+    goodFor: ["A seasonal creative afternoon", "Friends", "Solo creative time", "Halloween lovers"],
+    bookingNote:
+      "Select an available date, choose the number of seats, and continue to secure checkout.",
+  },
+  {
     slug: "foam-clay-mirror",
     title: "Foam Clay Mirror Workshop",
     navTitle: "Foam Clay",
@@ -44,9 +79,10 @@ export const workshops: Workshop[] = [
       "A slow, tactile workshop where you decorate your own mirror with lightweight foam clay details.",
     longDescription:
       "Create a playful mirror with soft clay florals, textures, and color combinations that feel personal to you. The session is designed to be calm and beginner friendly, with guidance, examples, and all materials prepared before you arrive.",
-    priceLabel: "EUR 40 per person",
+    priceCents: 4000,
     durationLabel: "2 hours",
-    capacityLabel: "Max 10 people",
+    durationMinutes: 120,
+    capacity: 10,
     status: "bookable",
     statusLabel: "Book a date",
     image: "/images/foam-clay-mirror.jpeg",
@@ -73,9 +109,10 @@ export const workshops: Workshop[] = [
       "Choose from a curated charm bar and design a sweet, personal accessory in a relaxed studio setting.",
     longDescription:
       "Mix letters, colors, beads, clips, cords, and tiny details to create a bag charm that feels completely yours. The format is easy to join, social, and ideal for a lighter creative session.",
-    priceLabel: "EUR 15 per person",
+    priceCents: 1500,
     durationLabel: "30-45 minutes",
-    capacityLabel: "Max 10 people",
+    durationMinutes: 45,
+    capacity: 10,
     status: "bookable",
     statusLabel: "Book a date",
     image: "/images/charm-bar.jpeg",
@@ -91,36 +128,18 @@ export const workshops: Workshop[] = [
     bookingNote:
       "Select an available date, choose the number of seats, and continue to secure checkout.",
   },
-  {
-    slug: "paint-a-tote-bag",
-    title: "Paint a Tote Bag",
-    navTitle: "Tote Bag",
-    tagline: "A new textile workshop for painting your own everyday tote.",
-    cardDescription:
-      "Turn a blank tote bag into something uniquely yours using fabric pens, with the freedom to create your own design or use one of our templates.",
-    shortDescription:
-      "A coming-soon session for creating a reusable tote bag with your own painted design.",
-    longDescription:
-      "This workshop is being prepared as the next Ukiyo Studio format. The page is live so visitors can discover what is coming, while booking remains closed until the details are final.",
-    priceLabel: "Coming soon",
-    durationLabel: "Coming soon",
-    capacityLabel: "Coming soon",
-    status: "coming-soon",
-    statusLabel: "Coming soon",
-    image: "/images/tote-bag.jpeg",
-    imageAlt: "Hands painting floral details on a canvas tote bag with fabric markers",
-    accent: "tote",
-    includes: [
-      "Reusable tote bag",
-      "Textile paints and tools",
-      "Design inspiration",
-      "Finished tote to take home",
-    ],
-    goodFor: ["Creative afternoons", "Friends", "Beginners", "Personal gifts"],
-    bookingNote:
-      "This workshop is not open for booking yet. It can be activated in Phase 2 once the details are final.",
-  },
 ];
+
+export function getWorkshopPriceLabel(workshop: Workshop) {
+  const price = new Intl.NumberFormat("en-NL", {
+    style: "currency",
+    currency: "EUR",
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2,
+  }).format(workshop.priceCents / 100);
+
+  return `${price} per person`;
+}
 
 export function getWorkshop(slug: string) {
   return workshops.find((workshop) => workshop.slug === slug);

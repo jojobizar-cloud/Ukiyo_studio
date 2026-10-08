@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { BookingCalendar } from "@/components/BookingCalendar";
-import { getWorkshop, studioLocation, workshops } from "@/lib/workshops";
+import { getWorkshop, getWorkshopPriceLabel, studioLocation, workshops } from "@/lib/workshops";
 
 type WorkshopPageProps = {
   params: Promise<{
@@ -45,10 +45,10 @@ export default async function WorkshopDetailPage({ params }: WorkshopPageProps) 
         <div className="detail-hero-copy">
           <p className="eyebrow">{workshop.statusLabel}</p>
           <h1>{workshop.title}</h1>
+          {workshop.subtitle ? <p className="detail-subtitle">{workshop.subtitle}</p> : null}
           <p>{workshop.tagline}</p>
           <div className="detail-meta">
-            <span>{workshop.priceLabel}</span>
-            <span>{workshop.capacityLabel}</span>
+            <span>{getWorkshopPriceLabel(workshop)}</span>
             <span>{workshop.durationLabel}</span>
           </div>
         </div>

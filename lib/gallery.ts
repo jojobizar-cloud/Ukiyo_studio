@@ -1,0 +1,80 @@
+export const galleryPhotos = [
+  {
+    src: "/images/gallery/studio-ready-for-workshop.jpg",
+    alt: "Ukiyo Studio workshop table set with mirrors, colourful clay, flowers and snacks",
+    width: 667,
+    height: 701,
+  },
+  {
+    src: "/images/gallery/workshop-guidance.jpg",
+    alt: "Creative guidance at the table during a soft clay mirror workshop",
+    width: 959,
+    height: 1280,
+  },
+  {
+    src: "/images/gallery/creative-workshop-table.jpg",
+    alt: "Guests creating mirrors together with soft clay, inspiration sheets and refreshments",
+    width: 960,
+    height: 1280,
+  },
+  {
+    src: "/images/gallery/shaping-soft-clay.jpg",
+    alt: "Shaping a red soft clay detail by hand with a modelling tool",
+    width: 959,
+    height: 1280,
+  },
+  {
+    src: "/images/gallery/charm-bar-keychains.jpg",
+    alt: "Colourful handmade bag charms spelling Mommy Bag, Love Matcha and Ukiyo Studio",
+    width: 1254,
+    height: 1254,
+  },
+  {
+    src: "/images/gallery/clay-mushroom-details.jpg",
+    alt: "Adding white spots to a tiny red clay mushroom on a mirror",
+    width: 959,
+    height: 1280,
+  },
+  {
+    src: "/images/gallery/colourful-clay-creations.jpg",
+    alt: "Handmade clay mushrooms, cherries, flowers and a rainbow taking shape at the workshop",
+    width: 959,
+    height: 1280,
+  },
+  {
+    src: "/images/gallery/personalised-pink-keychain.jpg",
+    alt: "Personalised pink Miriam keychain with colourful letters and a heart-shaped clip",
+    width: 1033,
+    height: 1280,
+  },
+  {
+    src: "/images/gallery/clay-mirrors-in-progress.jpg",
+    alt: "Mirrors in progress with handmade clay flowers around a shared workshop table",
+    width: 960,
+    height: 1280,
+  },
+  {
+    src: "/images/gallery/sunflower-mirror.jpg",
+    alt: "A mirror decorated with a soft clay sunflower, daisies and a small yellow face",
+    width: 959,
+    height: 1280,
+  },
+  {
+    src: "/images/gallery/charm-bar-love-matcha.jpg",
+    alt: "Pastel green and pink Love Matcha charm with balloon dog and star details",
+    width: 960,
+    height: 1280,
+  },
+  {
+    src: "/images/gallery/making-clay-flowers.jpg",
+    alt: "Making a pink soft clay flower with a modelling tool beside a mirror",
+    width: 959,
+    height: 1280,
+  },
+  {
+    src: "/images/gallery/charm-bar-bag-charm.jpg",
+    alt: "Colourful Mommy Bag charm with red letters attached to a woven brown bag",
+    width: 960,
+    height: 1280,
+  },
+];

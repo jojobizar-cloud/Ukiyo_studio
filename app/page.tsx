@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ContactNavButton } from "@/components/ContactNavButton";
 import { WorkshopCard } from "@/components/WorkshopCard";
+import { galleryPhotos } from "@/lib/gallery";
 import { studioLocation, workshops } from "@/lib/workshops";
 
 export default function Home() {
@@ -100,24 +101,30 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="gallery-section" id="gallery">
+      <section className="gallery-section" id="gallery" aria-labelledby="gallery-title">
         <div className="section-copy centered">
-          <p className="eyebrow">Gallery</p>
-          <h2>Custom charms, color, and playful details</h2>
+          <h2 id="gallery-title">Gallery</h2>
         </div>
         <div className="gallery-grid">
-          <img
-            src="/images/gallery/charm-bar-keychains.jpg"
-            alt="Colorful handmade charm bar keychains spelling Mommy Bag, Love Hateha, and Ukiyo Studio"
-          />
-          <img
-            src="/images/gallery/charm-bar-bag-charm.jpg"
-            alt="Colorful Mommy Bag charm with red letters attached to a woven brown bag"
-          />
-          <img
-            src="/images/gallery/charm-bar-love-matcha.jpg"
-            alt="Pastel green and pink Love Matcha charm with balloon dog and star details"
-          />
+          {galleryPhotos.map((photo) => (
+            <a
+              className="gallery-photo"
+              href={photo.src}
+              key={photo.src}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`View photo: ${photo.alt} (opens in a new tab)`}
+            >
+              <img
+                src={photo.src}
+                alt={photo.alt}
+                width={photo.width}
+                height={photo.height}
+                loading="lazy"
+                decoding="async"
+              />
+            </a>
+          ))}
         </div>
       </section>
 

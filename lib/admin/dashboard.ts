@@ -93,37 +93,15 @@ export type AdminDashboardData = {
   emails: AdminEmailRow[];
 };
 
-const adminWorkshopDefaults: Record<
-  string,
-  {
-    defaultCapacity: number;
-    defaultDurationMinutes: number;
-    defaultPriceCents: number;
-  }
-> = {
-  "charm-bar": {
-    defaultCapacity: 10,
-    defaultDurationMinutes: 45,
-    defaultPriceCents: 1500,
-  },
-  "foam-clay-mirror": {
-    defaultCapacity: 10,
-    defaultDurationMinutes: 120,
-    defaultPriceCents: 4000,
-  },
-};
-
 export function getAdminWorkshopOptions(): AdminWorkshopOption[] {
   return workshops
     .filter((workshop) => workshop.status === "bookable")
     .map((workshop) => ({
       slug: workshop.slug,
       title: workshop.title,
-      ...(adminWorkshopDefaults[workshop.slug] ?? {
-        defaultCapacity: 10,
-        defaultDurationMinutes: 120,
-        defaultPriceCents: 0,
-      }),
+      defaultCapacity: workshop.capacity,
+      defaultDurationMinutes: workshop.durationMinutes,
+      defaultPriceCents: workshop.priceCents,
     }));
 }
 
